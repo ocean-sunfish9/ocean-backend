@@ -1,7 +1,8 @@
 package com.sparta.oceanbackend.api.auth.controller;
 
+import com.sparta.oceanbackend.api.auth.dto.request.LoginRequest;
 import com.sparta.oceanbackend.api.auth.dto.request.RegisterRequest;
-import com.sparta.oceanbackend.api.auth.dto.response.RegisterResponse;
+import com.sparta.oceanbackend.api.auth.dto.response.AuthResponse;
 import com.sparta.oceanbackend.api.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +18,13 @@ public class AuthController {
 
     @PostMapping("/signup")
     @ResponseStatus(HttpStatus.CREATED)
-    public RegisterResponse registerUser(@RequestBody RegisterRequest request) {
+    public AuthResponse registerUser(@RequestBody RegisterRequest request) {
         return authService.registerUser(request);
+    }
+
+    @PostMapping("/login")
+    @ResponseStatus(HttpStatus.OK)
+    public AuthResponse loginUser(@RequestBody LoginRequest request) {
+        return authService.loginUser(request);
     }
 }

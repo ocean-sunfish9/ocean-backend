@@ -1,9 +1,6 @@
 package com.sparta.oceanbackend.domain.user.entity;
 
 import com.sparta.oceanbackend.common.entity.Timestamped;
-import com.sparta.oceanbackend.common.exception.ExceptionType;
-import com.sparta.oceanbackend.common.exception.ResponseException;
-import com.sparta.oceanbackend.domain.user.repository.UserRepository;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,11 +28,5 @@ public class User extends Timestamped {
     public User(String name, String password) {
         this.name = name;
         this.password = password;
-    }
-
-    public void checkNameDuplicate(String name, UserRepository userRepository) {
-        if (userRepository.findByName(name).isPresent()) {
-            throw new ResponseException(ExceptionType.NAME_IN_USE);
-        }
     }
 }
