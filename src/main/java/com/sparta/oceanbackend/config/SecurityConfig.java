@@ -4,7 +4,7 @@ import com.sparta.oceanbackend.api.filter.JwtAuthenticationFilter;
 import com.sparta.oceanbackend.api.handler.AuthenticationHandler;
 import com.sparta.oceanbackend.api.util.JwtUtil;
 import com.sparta.oceanbackend.domain.user.repository.UserRepository;
-import com.sparta.oceanbackend.domain.user.service.UserDetailsServiceImpl;
+import com.sparta.oceanbackend.api.user.service.UserDetailsServiceImpl;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;

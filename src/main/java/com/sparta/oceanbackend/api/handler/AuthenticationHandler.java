@@ -22,8 +22,8 @@ public class AuthenticationHandler {
 
     public void handleAuthentication(String token, HttpServletRequest request) {
         Claims claims = jwtUtil.getClaimsFromToken(token);
-        String username = claims.getSubject();
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+        String name = claims.getSubject();
+        UserDetails userDetails = userDetailsService.loadUserByUsername(name);
 
         UsernamePasswordAuthenticationToken authentication =
                 new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());

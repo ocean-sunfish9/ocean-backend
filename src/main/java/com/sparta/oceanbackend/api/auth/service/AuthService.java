@@ -3,23 +3,30 @@ package com.sparta.oceanbackend.api.auth.service;
 import com.sparta.oceanbackend.api.auth.dto.request.LoginRequest;
 import com.sparta.oceanbackend.api.auth.dto.request.RegisterRequest;
 import com.sparta.oceanbackend.api.auth.dto.response.AuthResponse;
+import com.sparta.oceanbackend.api.util.JwtUtil;
 import com.sparta.oceanbackend.common.exception.ExceptionType;
 import com.sparta.oceanbackend.common.exception.ResponseException;
 import com.sparta.oceanbackend.config.PasswordEncoder;
 import com.sparta.oceanbackend.domain.user.entity.User;
 import com.sparta.oceanbackend.domain.user.repository.UserRepository;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
 
+    @Transactional
     public AuthResponse registerUser(RegisterRequest request) {
         validatePasswordMatch(request.getPassword(), request.getPasswordCheck());
         validateNameDuplicate(request.getName());
@@ -29,11 +36,25 @@ public class AuthService {
         return new AuthResponse(savedUser.getId(), savedUser.getName());
     }
 
-    public AuthResponse loginUser(LoginRequest request) {
+    public AuthResponse loginUser(LoginRequest request, HttpServletResponse response) {
         User user = findUserByName(request.getName());
         validatePassword(request.getPassword(), user.getPassword());
 
-        return new AuthResponse(user.getId(), user.getName());
+        AuthResponse authResponse = new AuthResponse(user.getId(), user.getName());
+        String token = generateJwtToken(user);
+
+        Cookie cookie = new Cookie("jwt", token);
+        cookie.setHttpOnly(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(3600); // 1시간
+
+        response.addCookie(cookie);
+
+        return authResponse;
+    }
+
+    public String generateJwtToken(User user) {
+        return jwtUtil.generateToken(user.getId(), user.getName());
     }
 
     private void validatePasswordMatch(String password, String passwordCheck) {
