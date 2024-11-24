@@ -16,7 +16,8 @@ public enum ExceptionType {
     // 공통기능(C)
     NAME_IN_USE("C001", "이미 사용 중인 사용자명입니다.", HttpStatus.CONFLICT),
     PASSWORD_MISMATCH("C002", "비밀번호가 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
-    NAME_MISMATCH("C003", "해당 사용자명이 존재하지 않습니다.", HttpStatus.BAD_REQUEST);
+    NAME_MISMATCH("C003", "사용자명이 일치하지 않습니다.", HttpStatus.BAD_REQUEST),
+    USER_NOT_FOUND("C004", "사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
 
     private final String errorCode;
     private final String message;

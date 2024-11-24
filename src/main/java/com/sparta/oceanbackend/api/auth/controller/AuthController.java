@@ -4,6 +4,7 @@ import com.sparta.oceanbackend.api.auth.dto.request.LoginRequest;
 import com.sparta.oceanbackend.api.auth.dto.request.RegisterRequest;
 import com.sparta.oceanbackend.api.auth.dto.response.AuthResponse;
 import com.sparta.oceanbackend.api.auth.service.AuthService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @ResponseStatus(HttpStatus.OK)
-    public AuthResponse loginUser(@RequestBody LoginRequest request) {
-        return authService.loginUser(request);
+    public AuthResponse loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
+        return authService.loginUser(request, response);
     }
 }
