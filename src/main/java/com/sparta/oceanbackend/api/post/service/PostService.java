@@ -4,12 +4,15 @@ import com.sparta.oceanbackend.api.enums.Categorys;
 import com.sparta.oceanbackend.api.post.dto.request.PostCreateRequest;
 import com.sparta.oceanbackend.api.post.dto.request.PostModifyRequest;
 import com.sparta.oceanbackend.api.post.dto.response.PostCreateResponse;
+import com.sparta.oceanbackend.api.post.dto.response.PostResponse;
 import com.sparta.oceanbackend.common.exception.ExceptionType;
 import com.sparta.oceanbackend.common.exception.ResponseException;
 import com.sparta.oceanbackend.domain.post.entity.Post;
 import com.sparta.oceanbackend.domain.post.repository.PostRepository;
 import com.sparta.oceanbackend.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,5 +56,11 @@ public class PostService {
             throw new ResponseException(ExceptionType.NOT_WRITER_POST);
         }
         postRepository.deletePost(postId);
+    }
+
+    public Page<PostResponse> findByCategory(
+        String category,
+        Pageable pageable) {
+        return postRepository.findByCategory(Categorys.valueOf(category), pageable).map(PostResponse::new);
     }
 }
