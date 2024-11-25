@@ -1,14 +1,13 @@
 package com.sparta.oceanbackend.api.post.controller;
 
 import com.sparta.oceanbackend.api.auth.annotation.AuthUser;
-import com.sparta.oceanbackend.api.enums.Categorys;
 import com.sparta.oceanbackend.api.post.dto.request.PostCreateRequest;
 import com.sparta.oceanbackend.api.post.dto.request.PostModifyRequest;
 import com.sparta.oceanbackend.api.post.dto.request.SearchCategoryRequest;
 import com.sparta.oceanbackend.api.post.dto.response.PostCreateResponse;
+import com.sparta.oceanbackend.api.post.dto.response.PostReadResponse;
 import com.sparta.oceanbackend.api.post.dto.response.PostResponse;
 import com.sparta.oceanbackend.api.post.service.PostService;
-import com.sparta.oceanbackend.common.annotation.ValidEnum;
 import com.sparta.oceanbackend.domain.user.entity.User;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +39,14 @@ public class PostController {
         .body(postService.createPost(postCreateRequest, user));
   }
 
+  @GetMapping("/search")
+  public ResponseEntity<Page<PostReadResponse>> searchPosts(
+      @RequestParam String keyword,
+      @RequestParam(defaultValue = "1") int pagenumber,
+      @RequestParam(defaultValue = "10") int pagesize) {
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPosts(pagenumber,pagesize,keyword));
+  }
+
   @PutMapping("/{postId}")
   public ResponseEntity<Void> modifyPost(@AuthUser User user, @PathVariable Long postId, @Valid @RequestBody PostModifyRequest postModifyRequest) {
     postService.modifyPost(user.getId(), postId, postModifyRequest);
@@ -52,7 +59,7 @@ public class PostController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
-  @GetMapping("/search")
+  @GetMapping("/search/category")
   public ResponseEntity<Page<PostResponse>> findByCategory(
       @RequestBody @Valid SearchCategoryRequest categoryRequest,
       @RequestParam(required = false, defaultValue = "1") int pageNum,
