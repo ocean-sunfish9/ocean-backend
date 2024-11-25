@@ -16,7 +16,7 @@ public class PostReadResponse {
 
   @Builder
   public PostReadResponse(
-      Long id, String title, String name, Long commentList, LocalDateTime updatedAt) {
+    Long id, String title, String name, Long commentList, LocalDateTime updatedAt) {
     this.id = id;
     this.title = title;
     this.name = name;

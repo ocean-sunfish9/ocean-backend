@@ -60,7 +60,7 @@ public class PostController {
   }
 
   @GetMapping("/search/category")
-  public ResponseEntity<Page<PostResponse>> findByCategory(
+  public ResponseEntity<Page<PostReadResponse>> findByCategory(
       @RequestBody @Valid SearchCategoryRequest categoryRequest,
       @RequestParam(required = false, defaultValue = "1") int pageNum,
       @RequestParam(required = false, defaultValue = "10") int pageSize){
