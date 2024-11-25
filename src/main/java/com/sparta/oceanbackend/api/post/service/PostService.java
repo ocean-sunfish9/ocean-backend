@@ -9,7 +9,6 @@ import com.sparta.oceanbackend.common.exception.ResponseException;
 import com.sparta.oceanbackend.domain.post.entity.Post;
 import com.sparta.oceanbackend.domain.post.repository.PostRepository;
 import com.sparta.oceanbackend.domain.user.entity.User;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,10 +17,10 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
 
-  private final PostRepository postRepository;
+    private final PostRepository postRepository;
 
-  @Transactional
-  public PostCreateResponse createPost(PostCreateRequest postCreateRequest, User user) {
+    @Transactional
+    public PostCreateResponse createPost(PostCreateRequest postCreateRequest, User user) {
     Post post =
         Post.builder()
             .title(postCreateRequest.getTitle())
@@ -30,17 +29,29 @@ public class PostService {
             .user(user)
             .build();
     return new PostCreateResponse(postRepository.save(post).getId());
-  }
+    }
 
-  @Transactional
-  public void modifyPost(
-      Long userId,
-      Long postId,
-      @Valid PostModifyRequest postModifyRequest) {
-      Post post = postRepository.findById(postId).orElseThrow(()-> new ResponseException(ExceptionType.NON_EXISTENT_POST));
-      if(!post.getUser().getId().equals(userId)){
-        throw new ResponseException(ExceptionType.NOT_WRITER_POST);
-      }
-      post.modifyPost(postModifyRequest.getTitle(),postModifyRequest.getContent(), postModifyRequest.getCategory());
-  }
+    @Transactional
+    public void modifyPost(
+        Long userId,
+        Long postId,
+        PostModifyRequest postModifyRequest) {
+        Post post = postRepository.findById(postId).orElseThrow(()-> new ResponseException(ExceptionType.NON_EXISTENT_POST));
+        if(!post.getUser().getId().equals(userId)){
+            throw new ResponseException(ExceptionType.NOT_WRITER_POST);
+        }
+        post.modifyPost(postModifyRequest.getTitle(),postModifyRequest.getContent(), postModifyRequest.getCategory());
+        postRepository.save(post);
+    }
+
+    @Transactional // 명시적
+    public void deletePost(
+        Long userId,
+        Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(()-> new ResponseException(ExceptionType.NON_EXISTENT_POST));
+        if(!post.getUser().getId().equals(userId)){
+            throw new ResponseException(ExceptionType.NOT_WRITER_POST);
+        }
+        postRepository.deletePost(postId);
+    }
 }
