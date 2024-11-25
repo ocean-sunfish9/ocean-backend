@@ -32,7 +32,6 @@ public class UserService {
         UserResponse response = new UserResponse();
         response.setId(user.getId());
         response.setName(user.getName());
-        response.setPassword(encodedNewPassword);
 
         userRepository.save(user);
 
