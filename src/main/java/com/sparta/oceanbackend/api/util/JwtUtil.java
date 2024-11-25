@@ -79,7 +79,7 @@ public class JwtUtil {
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                if ("jwt".equals(cookie.getName())) {
+                if ("Authorization".equals(cookie.getName())) {
                     return cookie;
                 }
             }
