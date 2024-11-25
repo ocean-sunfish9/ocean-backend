@@ -23,4 +23,7 @@ public abstract class Timestamped {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime updatedAt;
 
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private LocalDateTime deletedAt;
 }
