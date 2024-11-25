@@ -84,4 +84,9 @@ public class PostService {
                 .updatedAt(post.getUpdatedAt())
                 .build());
     }
+
+  public PostResponse findByPostId(Long postId) {
+    Post post = postRepository.findByPostId(postId).orElseThrow(()-> new ResponseException(ExceptionType.NON_EXISTENT_POST));
+    return new PostResponse(post);
+  }
 }

@@ -1,8 +1,8 @@
 package com.sparta.oceanbackend.domain.post.repository;
 
 import com.sparta.oceanbackend.api.enums.Categorys;
-import com.sparta.oceanbackend.api.post.dto.response.PostResponse;
 import com.sparta.oceanbackend.domain.post.entity.Post;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,4 +19,7 @@ public interface PostRepository extends JpaRepository<Post, Long>,PostQueryDslRe
     Page<Post> findByCategory(
         Categorys category,
         Pageable pageable);
+
+    @Query("select p from Post p left join fetch p.comments c left join fetch p.user u where p.id = :postId")
+    Optional<Post> findByPostId(Long postId);
 }
