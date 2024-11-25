@@ -6,11 +6,11 @@ import lombok.Getter;
 
 @Getter
 public class PostResponse {
-    private Long id;
-    private String title;
-    private String content;
-    private Categorys category;
-    private int commentCount;
+    private final Long id;
+    private final String title;
+    private final String content;
+    private final Categorys category;
+    private final int commentCount;
 
     public PostResponse(Post post){
         this.id = post.getId();
