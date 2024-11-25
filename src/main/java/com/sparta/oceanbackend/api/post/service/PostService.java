@@ -52,6 +52,6 @@ public class PostService {
         if(!post.getUser().getId().equals(userId)){
             throw new ResponseException(ExceptionType.NOT_WRITER_POST);
         }
-        postRepository.delete(post);
+        postRepository.deletePost(postId);
     }
 }
