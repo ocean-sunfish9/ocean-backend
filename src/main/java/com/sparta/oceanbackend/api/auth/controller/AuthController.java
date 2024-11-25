@@ -6,6 +6,7 @@ import com.sparta.oceanbackend.api.auth.dto.response.AuthResponse;
 import com.sparta.oceanbackend.api.auth.service.AuthService;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -18,14 +19,14 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    @ResponseStatus(HttpStatus.CREATED)
-    public AuthResponse registerUser(@RequestBody RegisterRequest request) {
-        return authService.registerUser(request);
+    public ResponseEntity<AuthResponse> registerUser(@RequestBody RegisterRequest request) {
+        AuthResponse response = authService.registerUser(request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    @ResponseStatus(HttpStatus.OK)
-    public AuthResponse loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
-        return authService.loginUser(request, response);
+    public ResponseEntity<AuthResponse> loginUser(@RequestBody LoginRequest request, HttpServletResponse response) {
+        AuthResponse authResponse = authService.loginUser(request, response);
+        return new ResponseEntity<>(authResponse, HttpStatus.OK);
     }
 }

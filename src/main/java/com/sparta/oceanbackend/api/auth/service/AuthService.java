@@ -12,19 +12,15 @@ import com.sparta.oceanbackend.domain.user.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
-
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
 
     @Transactional
     public AuthResponse registerUser(RegisterRequest request) {
@@ -43,7 +39,7 @@ public class AuthService {
         AuthResponse authResponse = new AuthResponse(user.getId(), user.getName());
         String token = generateJwtToken(user);
 
-        Cookie cookie = new Cookie("jwt", token);
+        Cookie cookie = new Cookie("Authorization", token);
         cookie.setHttpOnly(true);
         cookie.setPath("/");
         cookie.setMaxAge(3600); // 1시간

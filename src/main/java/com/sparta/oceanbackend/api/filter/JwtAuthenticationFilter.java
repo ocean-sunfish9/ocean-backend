@@ -6,19 +6,16 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
     private final AuthenticationHandler authenticationHandler;
-
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, AuthenticationHandler authenticationHandler) {
-        this.jwtUtil = jwtUtil;
-        this.authenticationHandler = authenticationHandler;
-    }
 
     @Override
     protected void doFilterInternal(

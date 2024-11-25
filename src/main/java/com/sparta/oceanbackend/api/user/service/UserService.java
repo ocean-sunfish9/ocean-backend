@@ -8,18 +8,15 @@ import com.sparta.oceanbackend.config.PasswordEncoder;
 import com.sparta.oceanbackend.domain.user.entity.User;
 import com.sparta.oceanbackend.domain.user.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @Transactional
+@RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public UserResponse changePassword(Long id, UserRequest request) {
         User user = userRepository.findById(id)
