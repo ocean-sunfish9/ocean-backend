@@ -67,4 +67,9 @@ public class PostController {
     Pageable pageable = PageRequest.of(pageNum -1, pageSize);
     return ResponseEntity.ok(postService.findByCategory(categoryRequest.getCategory(), pageable));
   }
+
+  @GetMapping("/search/{postId}")
+  public ResponseEntity<PostResponse> findByPostId(@PathVariable Long postId) {
+    return ResponseEntity.ok(postService.findByPostId(postId));
+  }
 }
