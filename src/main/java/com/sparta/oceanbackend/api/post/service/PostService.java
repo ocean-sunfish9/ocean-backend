@@ -72,9 +72,16 @@ public class PostService {
         postRepository.deletePost(postId);
     }
 
-    public Page<PostResponse> findByCategory(
+    public Page<PostReadResponse> findByCategory(
         String category,
         Pageable pageable) {
-        return postRepository.findByCategory(Categorys.valueOf(category), pageable).map(PostResponse::new);
+        return postRepository.findByCategory(Categorys.valueOf(category), pageable)
+            .map(post -> PostReadResponse.builder()
+                .id(post.getId())
+                .title(post.getTitle())
+                .name(post.getUser().getName())
+                .commentList((long) post.getComments().size())
+                .updatedAt(post.getUpdatedAt())
+                .build());
     }
 }
