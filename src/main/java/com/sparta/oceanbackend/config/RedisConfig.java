@@ -38,7 +38,7 @@ public class RedisConfig {
     RedisCacheConfiguration cacheConfiguration = RedisCacheConfiguration
         .defaultCacheConfig()
         .disableCachingNullValues() // null 값 제외
-        .entryTtl(Duration.ofMinutes(1L)) //  만료시간 1분
+        .entryTtl(Duration.ofMinutes(10L)) //  만료시간 1분
         .computePrefixWith(CacheKeyPrefix.simple()) // key 앞에 :: 붙여줌 ex - post::~~
         .serializeKeysWith(
             RedisSerializationContext
