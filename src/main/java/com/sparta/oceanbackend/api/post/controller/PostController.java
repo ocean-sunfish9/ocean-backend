@@ -57,6 +57,15 @@ public class PostController {
         .body(postService.searchPostsInMemory(pagenumber, pagesize, keyword));
   }
 
+  @GetMapping("/search/v3")
+  public ResponseEntity<Page<PostReadResponse>> searchPostsRedis(
+      @RequestParam String keyword,
+      @RequestParam(defaultValue = "1") int pagenumber,
+      @RequestParam(defaultValue = "10") int pagesize) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(postService.searchPostsRedis(pagenumber, pagesize, keyword));
+  }
+
   @PutMapping("/{postId}")
   public ResponseEntity<Void> modifyPost(
       @AuthUser User user,

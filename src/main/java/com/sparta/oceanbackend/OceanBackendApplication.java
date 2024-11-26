@@ -8,7 +8,6 @@ import org.springframework.data.web.config.EnableSpringDataWebSupport.PageSerial
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @SpringBootApplication
-// 페이징 처리시에 반환값들을 간단하게 출력하도록 해줌
 @EnableSpringDataWebSupport(pageSerializationMode = PageSerializationMode.VIA_DTO)
 @EnableJpaAuditing
 @EnableScheduling
