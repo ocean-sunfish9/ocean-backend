@@ -39,16 +39,29 @@ public class PostController {
         .body(postService.createPost(postCreateRequest, user));
   }
 
-  @GetMapping("/search")
+  @GetMapping("/search/v1")
   public ResponseEntity<Page<PostReadResponse>> searchPosts(
       @RequestParam String keyword,
       @RequestParam(defaultValue = "1") int pagenumber,
       @RequestParam(defaultValue = "10") int pagesize) {
-    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPosts(pagenumber,pagesize,keyword));
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(postService.searchPosts(pagenumber, pagesize, keyword));
+  }
+
+  @GetMapping("/search/v2")
+  public ResponseEntity<Page<PostReadResponse>> searchPostsInMemory(
+      @RequestParam String keyword,
+      @RequestParam(defaultValue = "1") int pagenumber,
+      @RequestParam(defaultValue = "10") int pagesize) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(postService.searchPostsInMemory(pagenumber, pagesize, keyword));
   }
 
   @PutMapping("/{postId}")
-  public ResponseEntity<Void> modifyPost(@AuthUser User user, @PathVariable Long postId, @Valid @RequestBody PostModifyRequest postModifyRequest) {
+  public ResponseEntity<Void> modifyPost(
+      @AuthUser User user,
+      @PathVariable Long postId,
+      @Valid @RequestBody PostModifyRequest postModifyRequest) {
     postService.modifyPost(user.getId(), postId, postModifyRequest);
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
@@ -63,8 +76,8 @@ public class PostController {
   public ResponseEntity<Page<PostReadResponse>> findByCategory(
       @RequestBody @Valid SearchCategoryRequest categoryRequest,
       @RequestParam(required = false, defaultValue = "1") int pageNum,
-      @RequestParam(required = false, defaultValue = "10") int pageSize){
-    Pageable pageable = PageRequest.of(pageNum -1, pageSize);
+      @RequestParam(required = false, defaultValue = "10") int pageSize) {
+    Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
     return ResponseEntity.ok(postService.findByCategory(categoryRequest.getCategory(), pageable));
   }
 
