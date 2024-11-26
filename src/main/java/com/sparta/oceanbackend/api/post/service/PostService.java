@@ -58,7 +58,7 @@ public class PostService {
   }
 
   @Transactional
-  @Cacheable(cacheNames = "keyword", key = "'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize", cacheManager = "redisCacheManager")
+  @Cacheable(cacheNames = "keyword", key = "'keyword:' + #keyword + 'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize", cacheManager = "redisCacheManager")
   public Page<PostReadResponse> searchPostsRedis(
       int pagenumber,
       int pagesize,
