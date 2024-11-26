@@ -50,8 +50,19 @@ public class PostService {
   @Cacheable(
       value = "searchPostsCache",
       key = "#keyword + '_' + #pagenumber + '_' + #pagesize",
-      condition = "#pagesize < 100")
+      condition = "#pagesize < 100", cacheManager = "cacheManager")
   public Page<PostReadResponse> searchPostsInMemory(int pagenumber, int pagesize, String keyword) {
+    Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
+    keywordRepository.upsertKeyword(keyword);
+    return postRepository.findByKeyword(keyword, pageable);
+  }
+
+  @Transactional
+  @Cacheable(cacheNames = "keyword", key = "'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize", cacheManager = "redisCacheManager")
+  public Page<PostReadResponse> searchPostsRedis(
+      int pagenumber,
+      int pagesize,
+      String keyword) {
     Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
     keywordRepository.upsertKeyword(keyword);
     return postRepository.findByKeyword(keyword, pageable);

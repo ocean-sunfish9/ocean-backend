@@ -7,13 +7,13 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.sparta.oceanbackend.api.post.dto.response.PostReadResponse;
+import com.sparta.oceanbackend.common.CustomPageImpl;
 import com.sparta.oceanbackend.domain.comment.entity.QComment;
 import com.sparta.oceanbackend.domain.post.entity.QPost;
 import com.sparta.oceanbackend.domain.user.entity.QUser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
@@ -50,7 +50,7 @@ public class PostQueryDslRepositoryImpl implements PostQueryDslRepository {
             .fetchResults();
     List<PostReadResponse> content = results.getResults();
     long total = results.getTotal();
-    return new PageImpl<>(content, pageable, total);
+    return new CustomPageImpl<>(content, pageable.getPageNumber(), pageable.getPageSize(), total);
   }
 
   private BooleanExpression hasTitle(String keyword) {

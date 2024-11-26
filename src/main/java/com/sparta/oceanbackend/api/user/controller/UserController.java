@@ -18,14 +18,14 @@ public class UserController {
     private final UserService userService;
 
     @PutMapping("/{id}/password")
-    public ResponseEntity<UserResponse> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest request) {
+    public ResponseEntity<UserResponse> changePassword(@PathVariable Long id, @Valid @RequestBody ChangePasswordRequest request) {
         UserResponse response = userService.changePassword(id, request);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
     @DeleteMapping({"/{id}"})
-    public ResponseEntity<UserResponse> deleteUser(@Valid @PathVariable Long id,
-                                                   @RequestBody UserDeleteRequest request,
+    public ResponseEntity<UserResponse> deleteUser(@PathVariable Long id,
+                                                   @Valid @RequestBody UserDeleteRequest request,
                                                    HttpServletResponse response) {
         UserResponse userResponse = userService.deleteUser(id, request, response);
         return new ResponseEntity<>(userResponse, HttpStatus.NO_CONTENT);
