@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface KeywordRepository extends JpaRepository<Keyword, Long> {
 
-    // 중볻된 Keyword 로 검색시 조회수증가 아니면 키워드 삽입
+    // 중복된 Keyword 로 검색시 조회수증가 아니면 키워드 삽입
     @Modifying
     @Query(value = "INSERT INTO keywords (keyword, count) VALUES (:keyword, 1) " +
             "ON DUPLICATE KEY UPDATE count = count + 1", nativeQuery = true)
