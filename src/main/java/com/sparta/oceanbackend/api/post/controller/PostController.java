@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/posts")
 @RequiredArgsConstructor
@@ -105,6 +107,11 @@ public class PostController {
       @RequestParam(defaultValue = "10") int pagesize) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(postService.searchPostsBestRedis(pagenumber, pagesize, keyword));
+  }
+
+  @GetMapping("/search/todaybests")
+  public ResponseEntity<List<PostReadResponse>> searchPostsToday(){
+    return ResponseEntity.status(HttpStatus.OK).body(postService.searchPostsToday());
   }
 
   @PutMapping("/{postId}")

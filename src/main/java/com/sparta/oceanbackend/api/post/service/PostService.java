@@ -12,11 +12,15 @@ import com.sparta.oceanbackend.domain.keyword.repository.KeywordRepository;
 import com.sparta.oceanbackend.domain.post.entity.Post;
 import com.sparta.oceanbackend.domain.post.repository.PostRepository;
 import com.sparta.oceanbackend.domain.user.entity.User;
+import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +30,9 @@ public class PostService {
 
   private final PostRepository postRepository;
   private final KeywordRepository keywordRepository;
+
+  @Qualifier("redisTemplate1")
+  private final RedisTemplate<String, Object> redisTemplate;
 
   @Transactional
   public PostCreateResponse createPost(PostCreateRequest postCreateRequest, User user) {
@@ -65,7 +72,7 @@ public class PostService {
   @Cacheable(
       cacheNames = "keyword",
       key = "'keyword:' + #keyword + 'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize",
-      cacheManager = "redisCacheManager")
+      cacheManager = "redisTemplate2")
   public Page<PostReadResponse> searchPostsRedis(int pagenumber, int pagesize, String keyword) {
     Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
     keywordRepository.upsertKeyword(keyword);
@@ -96,11 +103,17 @@ public class PostService {
   @Cacheable(
       cacheNames = "keyword",
       key = "'keyword:' + #keyword + 'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize",
-      cacheManager = "redisCacheManager")
+      cacheManager = "redisTemplate2")
   public Page<PostReadResponse> searchPostsBestRedis(int pagenumber, int pagesize, String keyword) {
     Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
     keywordRepository.upsertKeyword(keyword);
     return postRepository.findByKeywordInBest(keyword, pageable);
+  }
+
+  @Transactional(readOnly = true)
+  public List<PostReadResponse> searchPostsToday() {
+    List<Object> cachedPosts = redisTemplate.opsForList().range("BestPosts:top10", 0, -1);
+    return cachedPosts.stream().map(post -> (PostReadResponse) post).collect(Collectors.toList());
   }
 
   @Transactional

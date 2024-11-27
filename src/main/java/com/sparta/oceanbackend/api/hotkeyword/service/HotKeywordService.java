@@ -24,7 +24,7 @@ public class HotKeywordService {
   private final KeywordRepository keywordRepository;
   private final HotKeywordRepository hotKeywordRepository;
   private final JdbcTemplate jdbcTemplate;
-    private final RedisTemplate<Object, Object> redisTemplate;
+  private final RedisTemplate<Object, Object> redisTemplate;
 
     @Transactional
   @Scheduled(fixedDelay = 600000, zone = "Asia/Seoul")
@@ -78,7 +78,7 @@ public class HotKeywordService {
   @Cacheable(
           cacheNames = "hotKeyword",
           key = "'hotKeyword:' + #hotKeyword",
-          cacheManager = "redisCacheManager"
+          cacheManager = "redisTemplate2"
   )
   public List<HotKeywordReadResponse> getHotKeywordRedis() {
       return convertToHotKeywordReadResponse(hotKeywordRepository.findAll());
