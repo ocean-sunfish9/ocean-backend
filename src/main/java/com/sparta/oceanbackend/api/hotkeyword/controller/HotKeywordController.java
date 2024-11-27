@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -24,12 +23,12 @@ public class HotKeywordController {
     }
 
     @GetMapping("/v2")
-    public ResponseEntity<List<HotKeywordReadResponse>> getHotKeywordInMemory(@RequestParam String keyword) {
-        return ResponseEntity.status(HttpStatus.OK).body(hotKeywordService.getHotKeywordInMemory(keyword));
+    public ResponseEntity<List<HotKeywordReadResponse>> getHotKeywordInMemory() {
+        return ResponseEntity.status(HttpStatus.OK).body(hotKeywordService.getHotKeywordInMemory());
     }
 
     @GetMapping("/v3")
-    public ResponseEntity<List<HotKeywordReadResponse>> getHotKeywordRedis(@RequestParam String keyword) {
-        return ResponseEntity.status(HttpStatus.OK).body(hotKeywordService.getHotKeywordRedis(keyword));
+    public ResponseEntity<List<HotKeywordReadResponse>> getHotKeywordRedis() {
+        return ResponseEntity.status(HttpStatus.OK).body(hotKeywordService.getHotKeywordRedis());
     }
 }
