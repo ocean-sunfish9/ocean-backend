@@ -22,7 +22,7 @@ public class HotKeywordServicePerformanceTest {
 
     private String keyword;
 
-    private static final int ITERATIONS = 100; // 100번 반복
+    private static final int ITERATIONS = 1; // n번 반복으로 바꿔 쓰세용
     @Autowired
     private RedisTemplate<Object, Object> redisTemplate;
     @Autowired

@@ -20,7 +20,7 @@ public class PostServicePerformanceTest {
     private int pagenumber;
     private int pagesize;
 
-    private static final int ITERATIONS = 100; // 100번 반복
+    private static final int ITERATIONS = 1; // n번 반복으로 바꿔 쓰세용
 
     @BeforeEach
     public void setUp() {
