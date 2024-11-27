@@ -39,6 +39,13 @@ public class PostController {
         .body(postService.createPost(postCreateRequest, user));
   }
 
+  /*
+   * 모든 게시판 검색
+   * v1 . NonCache
+   * v2 . InMemory-Cache
+   * v3 . Redis-Cache
+   */
+
   @GetMapping("/search/v1")
   public ResponseEntity<Page<PostReadResponse>> searchPosts(
       @RequestParam String keyword,
@@ -64,6 +71,40 @@ public class PostController {
       @RequestParam(defaultValue = "10") int pagesize) {
     return ResponseEntity.status(HttpStatus.OK)
         .body(postService.searchPostsRedis(pagenumber, pagesize, keyword));
+  }
+
+  /*
+   * 인기 게시판 검색
+   * v1 . NonCache
+   * v2 . InMemory-Cache
+   * v3 . Redis-Cache
+   */
+
+  @GetMapping("/search/best/v1")
+  public ResponseEntity<Page<PostReadResponse>> searchPostsBest(
+      @RequestParam String keyword,
+      @RequestParam(defaultValue = "1") int pagenumber,
+      @RequestParam(defaultValue = "10") int pagesize) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(postService.searchPostsBest(pagenumber, pagesize, keyword));
+  }
+
+  @GetMapping("/search/best/v2")
+  public ResponseEntity<Page<PostReadResponse>> searchPostsBestInMemory(
+      @RequestParam String keyword,
+      @RequestParam(defaultValue = "1") int pagenumber,
+      @RequestParam(defaultValue = "10") int pagesize) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(postService.searchPostsBestInMemory(pagenumber, pagesize, keyword));
+  }
+
+  @GetMapping("/search/best/v3")
+  public ResponseEntity<Page<PostReadResponse>> searchPostsBestRedis(
+      @RequestParam String keyword,
+      @RequestParam(defaultValue = "1") int pagenumber,
+      @RequestParam(defaultValue = "10") int pagesize) {
+    return ResponseEntity.status(HttpStatus.OK)
+        .body(postService.searchPostsBestRedis(pagenumber, pagesize, keyword));
   }
 
   @PutMapping("/{postId}")

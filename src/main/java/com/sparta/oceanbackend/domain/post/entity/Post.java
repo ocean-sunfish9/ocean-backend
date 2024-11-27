@@ -2,6 +2,8 @@ package com.sparta.oceanbackend.domain.post.entity;
 
 import com.sparta.oceanbackend.api.enums.Categorys;
 import com.sparta.oceanbackend.common.entity.Timestamped;
+import com.sparta.oceanbackend.common.exception.ExceptionType;
+import com.sparta.oceanbackend.common.exception.ResponseException;
 import com.sparta.oceanbackend.domain.comment.entity.Comment;
 import com.sparta.oceanbackend.domain.user.entity.User;
 import jakarta.persistence.CascadeType;
@@ -71,5 +73,11 @@ public class Post extends Timestamped {
 
   public void updateCount() {
     this.count = this.count + 1;
+  }
+
+  public void validateActionAllowedForBestPost(){
+    if(this.category==Categorys.BEST_FORUM){
+      throw new ResponseException(ExceptionType.NOT_ACTION_ALL_ALLOWED_BEST_POST);
+    }
   }
 }

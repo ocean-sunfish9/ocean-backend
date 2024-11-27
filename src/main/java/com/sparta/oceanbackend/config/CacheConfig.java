@@ -14,7 +14,7 @@ public class CacheConfig {
     @Bean
     // TTL 사용을 위한 외부 캐시 라이브러리 사용 'Caffeine'
     public CacheManager cacheManager() {
-        CaffeineCacheManager cacheManager = new CaffeineCacheManager("searchPostsCache");
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager("searchPostsCache","searchPostsBestCache");
         cacheManager.setCaffeine(
                 Caffeine.newBuilder()
                         // 캐시 TTL 설정

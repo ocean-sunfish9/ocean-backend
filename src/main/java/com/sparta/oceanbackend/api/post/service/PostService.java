@@ -29,6 +29,9 @@ public class PostService {
 
   @Transactional
   public PostCreateResponse createPost(PostCreateRequest postCreateRequest, User user) {
+    if (postCreateRequest.getCategory().equals(Categorys.BEST_FORUM.toString())) {
+      throw new ResponseException(ExceptionType.NOT_ACTION_ALL_ALLOWED_BEST_POST);
+    }
     Post post =
         Post.builder()
             .title(postCreateRequest.getTitle())
@@ -70,6 +73,37 @@ public class PostService {
   }
 
   @Transactional
+  public Page<PostReadResponse> searchPostsBest(int pagenumber, int pagesize, String keyword) {
+    Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
+    keywordRepository.upsertKeyword(keyword);
+    return postRepository.findByKeywordInBest(keyword, pageable);
+  }
+
+  @Transactional
+  @Cacheable(
+      value = "searchPostsBestCache",
+      key = "#keyword + '_' + #pagenumber + '_' + #pagesize",
+      condition = "#pagesize < 100",
+      cacheManager = "cacheManager")
+  public Page<PostReadResponse> searchPostsBestInMemory(
+      int pagenumber, int pagesize, String keyword) {
+    Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
+    keywordRepository.upsertKeyword(keyword);
+    return postRepository.findByKeywordInBest(keyword, pageable);
+  }
+
+  @Transactional
+  @Cacheable(
+      cacheNames = "keyword",
+      key = "'keyword:' + #keyword + 'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize",
+      cacheManager = "redisCacheManager")
+  public Page<PostReadResponse> searchPostsBestRedis(int pagenumber, int pagesize, String keyword) {
+    Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
+    keywordRepository.upsertKeyword(keyword);
+    return postRepository.findByKeywordInBest(keyword, pageable);
+  }
+
+  @Transactional
   public void modifyPost(Long userId, Long postId, PostModifyRequest postModifyRequest) {
     Post post =
         postRepository
@@ -78,6 +112,7 @@ public class PostService {
     if (!post.getUser().getId().equals(userId)) {
       throw new ResponseException(ExceptionType.NOT_WRITER_POST);
     }
+    post.validateActionAllowedForBestPost();
     post.modifyPost(
         postModifyRequest.getTitle(),
         postModifyRequest.getContent(),
@@ -94,6 +129,7 @@ public class PostService {
     if (!post.getUser().getId().equals(userId)) {
       throw new ResponseException(ExceptionType.NOT_WRITER_POST);
     }
+    post.validateActionAllowedForBestPost();
     postRepository.deletePost(postId);
   }
 
