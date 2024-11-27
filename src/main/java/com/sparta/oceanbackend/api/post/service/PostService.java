@@ -50,7 +50,8 @@ public class PostService {
   @Cacheable(
       value = "searchPostsCache",
       key = "#keyword + '_' + #pagenumber + '_' + #pagesize",
-      condition = "#pagesize < 100", cacheManager = "cacheManager")
+      condition = "#pagesize < 100",
+      cacheManager = "cacheManager")
   public Page<PostReadResponse> searchPostsInMemory(int pagenumber, int pagesize, String keyword) {
     Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
     keywordRepository.upsertKeyword(keyword);
@@ -58,11 +59,11 @@ public class PostService {
   }
 
   @Transactional
-  @Cacheable(cacheNames = "keyword", key = "'keyword:' + #keyword + 'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize", cacheManager = "redisCacheManager")
-  public Page<PostReadResponse> searchPostsRedis(
-      int pagenumber,
-      int pagesize,
-      String keyword) {
+  @Cacheable(
+      cacheNames = "keyword",
+      key = "'keyword:' + #keyword + 'pagenumber:' + #pagenumber + 'pagesize:' + #pagesize",
+      cacheManager = "redisCacheManager")
+  public Page<PostReadResponse> searchPostsRedis(int pagenumber, int pagesize, String keyword) {
     Pageable pageable = PageRequest.of(pagenumber - 1, pagesize);
     keywordRepository.upsertKeyword(keyword);
     return postRepository.findByKeyword(keyword, pageable);
@@ -110,11 +111,13 @@ public class PostService {
                     .build());
   }
 
+  @Transactional
   public PostResponse findByPostId(Long postId) {
     Post post =
         postRepository
             .findByPostId(postId)
             .orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
+    post.updateCount();
     return new PostResponse(post);
   }
 }
