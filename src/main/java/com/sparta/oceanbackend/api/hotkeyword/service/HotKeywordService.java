@@ -70,8 +70,8 @@ public class HotKeywordService {
           condition = "#hotKeyword != null && !#hotKeyword.isEmpty()",
           unless = "#result == null || #result.isEmpty()"
   )
-  public List<HotKeywordReadResponse> getHotKeywordInMemory(String hotKeyword) {
-      return convertToHotKeywordReadResponse(hotKeywordRepository.findByKeyword(hotKeyword));
+  public List<HotKeywordReadResponse> getHotKeywordInMemory() {
+      return convertToHotKeywordReadResponse(hotKeywordRepository.findAll());
   }
 
   @Transactional(readOnly = true)
@@ -80,8 +80,8 @@ public class HotKeywordService {
           key = "'hotKeyword:' + #hotKeyword",
           cacheManager = "redisCacheManager"
   )
-  public List<HotKeywordReadResponse> getHotKeywordRedis(String hotKeyword) {
-      return convertToHotKeywordReadResponse(hotKeywordRepository.findByKeyword(hotKeyword));
+  public List<HotKeywordReadResponse> getHotKeywordRedis() {
+      return convertToHotKeywordReadResponse(hotKeywordRepository.findAll());
   }
 
   private List<HotKeywordReadResponse> convertToHotKeywordReadResponse(List<HotKeyword> hotKeywords) {

@@ -29,7 +29,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
             .requestMatchers("/api/auth/**").permitAll()
             .requestMatchers("/api/posts/search/**").permitAll()
-            .requestMatchers("/api/hotkeywords").permitAll()
+            .requestMatchers("/api/hotkeywords/**").permitAll()
             .anyRequest().authenticated()
             )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
