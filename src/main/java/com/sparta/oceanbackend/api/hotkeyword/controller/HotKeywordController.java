@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -17,8 +18,18 @@ public class HotKeywordController {
 
     private final HotKeywordService hotKeywordService;
 
-    @GetMapping
+    @GetMapping("/v1")
     public ResponseEntity<List<HotKeywordReadResponse>> getHotKeyword(){
         return ResponseEntity.status(HttpStatus.OK).body(hotKeywordService.getHotKeyword());
+    }
+
+    @GetMapping("/v2")
+    public ResponseEntity<List<HotKeywordReadResponse>> getHotKeywordInMemory(@RequestParam String keyword) {
+        return ResponseEntity.status(HttpStatus.OK).body(hotKeywordService.getHotKeywordInMemory(keyword));
+    }
+
+    @GetMapping("/v3")
+    public ResponseEntity<List<HotKeywordReadResponse>> getHotKeywordRedis(@RequestParam String keyword) {
+        return ResponseEntity.status(HttpStatus.OK).body(hotKeywordService.getHotKeywordRedis(keyword));
     }
 }
