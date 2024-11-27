@@ -20,7 +20,8 @@ public enum ExceptionType {
     USER_NOT_FOUND("C004", "사용자를 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     IN_VALID_REQUEST("C005","잘못된 요청 값", HttpStatus.BAD_REQUEST),
     NON_EXISTENT_POST("P001", "존재하지 않는 게시물입니다.", HttpStatus.BAD_REQUEST),
-    NOT_WRITER_POST("P002","본인이 작성한 게시글이 아닙니다.", HttpStatus.BAD_REQUEST);
+    NOT_WRITER_POST("P002","본인이 작성한 게시글이 아닙니다.", HttpStatus.BAD_REQUEST),
+    NOT_ACTION_ALL_ALLOWED_BEST_POST("P003","본인이 작성한 게시글이 아닙니다.", HttpStatus.BAD_REQUEST);
 
     private final String errorCode;
     private final String message;
