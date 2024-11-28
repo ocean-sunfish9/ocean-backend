@@ -3,6 +3,8 @@ package com.sparta.oceanbackend.domain.comment.entity;
 import com.sparta.oceanbackend.domain.post.entity.Post;
 import com.sparta.oceanbackend.domain.user.entity.User;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -33,5 +35,10 @@ public class Comment {
     this.content = content;
     this.post = post;
     this.user = user;
+  }
+
+
+  public void updateContent(String content) {
+    this.content = content;
   }
 }

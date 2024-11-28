@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Getter;
 
 @Getter
-public class CommentCreateRequest {
+public class CommentRequest {
     @Size(max = 255)
     @NotBlank(message = "내용을 입력해주세요")
     private String content;
