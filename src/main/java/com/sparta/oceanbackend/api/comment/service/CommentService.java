@@ -17,12 +17,12 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
+@Transactional
 public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-    @Transactional
     public CommentResponse createComment(Long postId, User user, CommentRequest request) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
         Comment comment = Comment.builder()
@@ -34,7 +34,6 @@ public class CommentService {
         return new CommentResponse(comment);
     }
 
-    @Transactional
     public CommentResponse updateComment(Long commentId, Long postId, User user, CommentRequest request) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
         List<Comment> comments = commentRepository.findAllByPostIdWithFetchJoin(postId);
@@ -48,5 +47,18 @@ public class CommentService {
         comment.updateContent(request.getContent());
         commentRepository.save(comment);
         return new CommentResponse(comment);
+    }
+
+
+    public void deleteComment(Long commentId, Long postId, User user) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
+        Comment comment = commentRepository.findByIdAndIsDeletedFalse(commentId)
+                .orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_COMMENT));
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new ResponseException(ExceptionType.NOT_WRITER_COMMENT);
+        }
+        comment.softDelete();
+        commentRepository.save(comment);
     }
 }

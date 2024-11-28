@@ -30,6 +30,9 @@ public class Comment {
   @JoinColumn(name = "user_id", nullable = false)
   private User user;
 
+  @Column(nullable = false)
+  private boolean isDeleted = false;
+
   @Builder
   public Comment(String content, Post post, User user) {
     this.content = content;
@@ -40,5 +43,9 @@ public class Comment {
 
   public void updateContent(String content) {
     this.content = content;
+  }
+
+  public void softDelete() {
+    this.isDeleted = true;
   }
 }
