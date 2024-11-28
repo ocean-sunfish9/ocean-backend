@@ -26,9 +26,9 @@ public class BestPostScheduler {
 
   @Transactional
   // 테스트 용
-  @Scheduled(fixedDelay = 30000, zone = "Asia/Seoul")
+//  @Scheduled(fixedDelay = 30000, zone = "Asia/Seoul")
   // 00:30
-  @Scheduled(cron = "0 30 0 * * ?", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 30 0 * * ?", zone = "Asia/Seoul")
   public void updateBestPosts() {
     // 페이지 처리된 인기 게시글 조회
     List<Post> cachedPosts = postRepository.findByBestCountTop10();
@@ -64,7 +64,7 @@ public class BestPostScheduler {
     for (PostReadResponse post : todayTop10) {
       redisTemplate.opsForList().rightPush("BestPosts:top10", post);
     }
-    // 캐시 만료 시간 설정 (30초)
-    redisTemplate.expire("BestPosts:top10", 30, TimeUnit.SECONDS);
+    // 캐시 만료 시간 설정 (24시간)
+    redisTemplate.expire("BestPosts:top10", 24, TimeUnit.HOURS);
   }
 }
