@@ -21,7 +21,7 @@ public class PostViewScheduler {
   private static final String REDIS_KEY_PREFIX = "post:view:*";
 
   // 테스트용
-//  @Scheduled(fixedDelay = 30000, zone = "Asia/Seoul")
+  @Scheduled(fixedDelay = 30000, zone = "Asia/Seoul")
   // 매일 00시 동작
     @Scheduled(cron = "0 0 0 * * ?")
   public void syncViewCount() {

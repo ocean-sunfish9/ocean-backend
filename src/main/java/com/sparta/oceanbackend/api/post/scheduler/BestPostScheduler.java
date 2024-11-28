@@ -26,7 +26,7 @@ public class BestPostScheduler {
 
   @Transactional
   // 테스트 용
-//  @Scheduled(fixedDelay = 30000, zone = "Asia/Seoul")
+  @Scheduled(fixedDelay = 30000, zone = "Asia/Seoul")
   // 00:30
     @Scheduled(cron = "0 30 0 * * ?", zone = "Asia/Seoul")
   public void updateBestPosts() {
