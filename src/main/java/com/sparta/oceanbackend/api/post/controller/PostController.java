@@ -1,6 +1,6 @@
 package com.sparta.oceanbackend.api.post.controller;
 
-import com.sparta.oceanbackend.api.auth.annotation.AuthUser;
+import com.sparta.oceanbackend.common.annotation.AuthUser;
 import com.sparta.oceanbackend.api.post.dto.request.PostCreateRequest;
 import com.sparta.oceanbackend.api.post.dto.request.PostModifyRequest;
 import com.sparta.oceanbackend.api.post.dto.request.SearchCategoryRequest;
