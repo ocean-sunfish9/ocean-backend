@@ -4,6 +4,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
 import java.time.Duration;
+
+import com.sparta.oceanbackend.config.info.RedisInfo;
+import io.lettuce.core.ReadFrom;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -13,27 +17,34 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import org.springframework.data.redis.connection.RedisStaticMasterReplicaConfiguration;
+import org.springframework.data.redis.connection.lettuce.LettuceClientConfiguration;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.*;
 
 @Configuration
 @EnableCaching
+@RequiredArgsConstructor
 public class RedisConfig {
-
-  @Value("${spring.data.redis.host}")
-  private String host;
-
-  @Value("${spring.data.redis.port}")
-  private int port;
 
   @Value("${spring.cache.redis.time-to-live}")
   private Long cacheTtlMinutes;
 
+  private final RedisInfo redisInfo;
+
   @Bean
   // Lettuce 라이브러리 사용
   public RedisConnectionFactory redisConnectionFactory() {
-    return new LettuceConnectionFactory(host, port);
+    // slave node 우선 Read.
+    LettuceClientConfiguration clientConfig =
+        LettuceClientConfiguration.builder().readFrom(ReadFrom.REPLICA_PREFERRED).build();
+    RedisStaticMasterReplicaConfiguration slaveConfig =
+        new RedisStaticMasterReplicaConfiguration(
+            redisInfo.getMaster().getHost(), redisInfo.getMaster().getPort());
+
+    redisInfo.getSlaves().forEach(slave -> slaveConfig.addNode(slave.getHost(), slave.getPort()));
+    return new LettuceConnectionFactory(slaveConfig, clientConfig);
   }
 
   // 인기게시글 직렬화/역직렬화 템플릿
