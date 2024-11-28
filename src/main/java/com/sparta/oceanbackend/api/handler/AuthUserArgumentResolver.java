@@ -1,6 +1,6 @@
 package com.sparta.oceanbackend.api.handler;
 
-import com.sparta.oceanbackend.api.auth.annotation.AuthUser;
+import com.sparta.oceanbackend.common.annotation.AuthUser;
 import com.sparta.oceanbackend.api.util.JwtUtil;
 import com.sparta.oceanbackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -30,7 +30,7 @@ public class AuthUserArgumentResolver implements HandlerMethodArgumentResolver {
             MethodParameter parameter,
             ModelAndViewContainer mavContainer,
             NativeWebRequest webRequest,
-            WebDataBinderFactory binderFactory) throws Exception {
+            WebDataBinderFactory binderFactory) {
         HttpServletRequest request = ((ServletWebRequest) webRequest).getRequest();
         String token = jwtUtil.resolveToken(request);
         if (token != null && jwtUtil.validateToken(token)) {

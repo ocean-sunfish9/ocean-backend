@@ -1,4 +1,4 @@
-package com.sparta.oceanbackend.api.auth.annotation;
+package com.sparta.oceanbackend.common.annotation;
 
 import java.lang.annotation.*;
 
