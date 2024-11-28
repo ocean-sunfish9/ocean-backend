@@ -1,6 +1,6 @@
 package com.sparta.oceanbackend.api.comment.service;
 
-import com.sparta.oceanbackend.api.comment.dto.request.CommentCreateRequest;
+import com.sparta.oceanbackend.api.comment.dto.request.CommentRequest;
 import com.sparta.oceanbackend.api.comment.dto.response.CommentResponse;
 import com.sparta.oceanbackend.common.exception.ExceptionType;
 import com.sparta.oceanbackend.common.exception.ResponseException;
@@ -9,12 +9,11 @@ import com.sparta.oceanbackend.domain.comment.repository.CommentRepository;
 import com.sparta.oceanbackend.domain.post.entity.Post;
 import com.sparta.oceanbackend.domain.post.repository.PostRepository;
 import com.sparta.oceanbackend.domain.user.entity.User;
-import com.sparta.oceanbackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @RequiredArgsConstructor
 @Service
@@ -23,16 +22,30 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
 
-
     @Transactional
-    public CommentResponse createComment(Long postId, User user, CommentCreateRequest request) {
-        Post post = postRepository.findById(postId).orElseThrow(()
-                -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
+    public CommentResponse createComment(Long postId, User user, CommentRequest request) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
         Comment comment = Comment.builder()
                 .content(request.getContent())
                 .post(post)
                 .user(user)
                 .build();
+        commentRepository.save(comment);
+        return new CommentResponse(comment);
+    }
+
+    @Transactional
+    public CommentResponse updateComment(Long commentId, Long postId, User user, CommentRequest request) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
+        List<Comment> comments = commentRepository.findAllByPostIdWithFetchJoin(postId);
+        Comment comment = comments.stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findFirst()
+                .orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_COMMENT));
+        if (!comment.getUser().getId().equals(user.getId())) {
+            throw new ResponseException(ExceptionType.NOT_WRITER_COMMENT);
+        }
+        comment.updateContent(request.getContent());
         commentRepository.save(comment);
         return new CommentResponse(comment);
     }
