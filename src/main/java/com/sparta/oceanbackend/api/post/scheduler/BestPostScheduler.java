@@ -13,9 +13,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class BestPostScheduler {
 
@@ -25,7 +25,10 @@ public class BestPostScheduler {
   private final RedisTemplate<String, Object> redisTemplate;
 
   @Transactional
+  // 테스트 용
   @Scheduled(fixedDelay = 30000, zone = "Asia/Seoul")
+  // 00:30
+  @Scheduled(cron = "0 30 0 * * ?", zone = "Asia/Seoul")
   public void updateBestPosts() {
     // 페이지 처리된 인기 게시글 조회
     List<Post> cachedPosts = postRepository.findByBestCountTop10();

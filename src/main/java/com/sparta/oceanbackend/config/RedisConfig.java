@@ -1,10 +1,9 @@
 package com.sparta.oceanbackend.config;
 
-import java.time.Duration;
-
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.impl.LaissezFaireSubTypeValidator;
+import java.time.Duration;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
@@ -16,10 +15,7 @@ import org.springframework.data.redis.cache.RedisCacheManager;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.data.redis.serializer.StringRedisSerializer;
+import org.springframework.data.redis.serializer.*;
 
 @Configuration
 @EnableCaching
@@ -40,6 +36,7 @@ public class RedisConfig {
     return new LettuceConnectionFactory(host, port);
   }
 
+  // 인기게시글 직렬화/역직렬화 템플릿
   @Bean(name = "redisTemplate1")
   public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory connectionFactory) {
     RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
@@ -128,5 +125,25 @@ public class RedisConfig {
         .withCacheConfiguration("genericCache", genericCacheConfig)
         .withCacheConfiguration("jacksonCache", jacksonCacheConfig)
         .build();
+  }
+
+  @Bean(name = "redisTemplateView")
+  public RedisTemplate<String, Integer> redisTemplateView(
+      RedisConnectionFactory connectionFactory) {
+    RedisTemplate<String, Integer> template = new RedisTemplate<>();
+    template.setConnectionFactory(connectionFactory);
+
+    // Key는 문자열로 저장
+    template.setKeySerializer(new StringRedisSerializer());
+
+    // Value를 Integer로 저장
+    template.setValueSerializer(new GenericToStringSerializer<>(Integer.class));
+
+    // Optional: Hash Key/Value Serializer 설정
+    template.setHashKeySerializer(new StringRedisSerializer());
+    template.setHashValueSerializer(new GenericToStringSerializer<>(Integer.class));
+
+    template.afterPropertiesSet();
+    return template;
   }
 }

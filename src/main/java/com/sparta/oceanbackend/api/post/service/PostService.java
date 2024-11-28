@@ -28,6 +28,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PostService {
 
+  private final PostViewService postViewService;
   private final PostRepository postRepository;
   private final KeywordRepository keywordRepository;
 
@@ -166,7 +167,8 @@ public class PostService {
         postRepository
             .findByPostId(postId)
             .orElseThrow(() -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
-    post.updateCount();
+    postViewService.incrementViewCount(post.getId());
+    //    post.updateCount();
     return new PostResponse(post);
   }
 }
