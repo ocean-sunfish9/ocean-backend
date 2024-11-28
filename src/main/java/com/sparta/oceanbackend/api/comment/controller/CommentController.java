@@ -1,6 +1,6 @@
 package com.sparta.oceanbackend.api.comment.controller;
 
-import com.sparta.oceanbackend.api.auth.annotation.AuthUser;
+import com.sparta.oceanbackend.common.annotation.AuthUser;
 import com.sparta.oceanbackend.api.comment.dto.request.CommentRequest;
 import com.sparta.oceanbackend.api.comment.dto.response.CommentResponse;
 import com.sparta.oceanbackend.api.comment.service.CommentService;

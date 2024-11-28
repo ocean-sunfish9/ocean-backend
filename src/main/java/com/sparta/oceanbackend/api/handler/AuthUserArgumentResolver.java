@@ -1,6 +1,6 @@
 package com.sparta.oceanbackend.api.handler;
 
-import com.sparta.oceanbackend.api.auth.annotation.AuthUser;
+import com.sparta.oceanbackend.common.annotation.AuthUser;
 import com.sparta.oceanbackend.api.util.JwtUtil;
 import com.sparta.oceanbackend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
