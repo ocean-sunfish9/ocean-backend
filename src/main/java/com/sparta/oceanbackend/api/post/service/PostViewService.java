@@ -1,5 +1,6 @@
 package com.sparta.oceanbackend.api.post.service;
 
+import java.util.concurrent.TimeUnit;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -16,5 +17,6 @@ public class PostViewService {
   public void incrementViewCount(Long postId) {
     String key = REDIS_KEY_PREFIX + postId;
     redisTemplate.opsForValue().increment(key);
+    redisTemplate.expire(REDIS_KEY_PREFIX + postId, 24, TimeUnit.HOURS);
   }
 }
