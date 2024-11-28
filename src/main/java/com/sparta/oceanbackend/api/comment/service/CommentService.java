@@ -22,13 +22,12 @@ public class CommentService {
 
     private final CommentRepository commentRepository;
     private final PostRepository postRepository;
-    private final UserRepository userRepository;
 
 
     @Transactional
     public CommentResponse createComment(Long postId, User user, CommentCreateRequest request) {
         Post post = postRepository.findById(postId).orElseThrow(()
-                -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Invalid post ID"));
+                -> new ResponseException(ExceptionType.NON_EXISTENT_POST));
         Comment comment = Comment.builder()
                 .content(request.getContent())
                 .post(post)
