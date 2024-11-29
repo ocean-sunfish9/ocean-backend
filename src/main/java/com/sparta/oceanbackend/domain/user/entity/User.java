@@ -1,5 +1,6 @@
 package com.sparta.oceanbackend.domain.user.entity;
 
+import com.sparta.oceanbackend.common.entity.Timestamped;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -9,12 +10,14 @@ import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Where;
 
 @Entity
 @Table(name = "users")
 @Getter
 @NoArgsConstructor
-public class User {
+@Where(clause = "deleted_at IS NULL")
+public class User extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
