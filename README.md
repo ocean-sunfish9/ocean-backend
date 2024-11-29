@@ -16,8 +16,8 @@
 |-------|----|----------------------------------------------|
 | 조성준   | 팀원 | Docker-Compose(Mysql, Redis), GithubActions CI, Redis 파이프 라인 설정, 인기 게시글 검색기능  |
 | 이하승   | 팀원 | 게시글 검색 기능 In-memory / redis 이용해 성능 개선,  Ngrinder 성능 측정                      |
-| 김동주   | 팀원 | SpringSecurity, JWT, 어뷰징 방지, 인기 검색어 조회                                           |
-| 고아라   | 팀장 | 댓글 작성 수정 삭제 CRUD, 연관관계 매핑, 와이어 프레임, 발표                                   |
+| 김동주   | 팀원 | SpringSecurity, JWT, 어뷰징 방지, 인기 검색어 조회기능                                           |
+| 고아라   | 팀장 | 댓글 작성 수정 삭제 CRUD, 연관관계 매핑, 와이어 프레임, ppt, 발표                                   |
 
 ## Tools
 
