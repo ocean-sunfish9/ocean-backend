@@ -284,6 +284,6 @@ domain
 ```
 
 ## Application 핵심 기능 시연 영상
-
+https://youtu.be/cckGDn1QnaQ
 
 
